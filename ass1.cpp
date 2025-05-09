@@ -44,12 +44,13 @@ public:
         }
     }
 
-    void dfsRecursiveHelper(int vertex, set<int>& visited, vector<int>& result) {
+    void dfsRecursiveHelper(int vertex, set<int>& visited, vector<int>& result,int level) {
         visited.insert(vertex);
         result.push_back(vertex);
+        cout<<"Node: "<<vertex<<" Level: "<<level<<endl;
         for (int neighbor : adjacencyList[vertex]) {
             if (visited.find(neighbor) == visited.end()) {
-                dfsRecursiveHelper(neighbor, visited, result);
+                dfsRecursiveHelper(neighbor, visited, result,level+1);
             }
         }
     }
@@ -57,7 +58,8 @@ public:
     vector<int> dfsRecursive(int startVertex) {
         set<int> visited;
         vector<int> result;
-        dfsRecursiveHelper(startVertex, visited, result);
+        
+        dfsRecursiveHelper(startVertex, visited, result,0);
         return result;
     }
 
@@ -85,17 +87,19 @@ public:
     vector<int> bfs(int startVertex) {
         vector<int> result;
         set<int> visited;
-        queue<int> queue;
+        queue<pair<int,int>> queue;
         visited.insert(startVertex);
-        queue.push(startVertex);
+        queue.push({startVertex,0});
         while (!queue.empty()) {
-            int currentVertex = queue.front();
+            int currentVertex = queue.front().first;
+            int level = queue.front().second;
             queue.pop();
             result.push_back(currentVertex);
+            cout<<"Node: "<<currentVertex<<" Level: "<<level<<endl;
             for (int neighbor : adjacencyList[currentVertex]) {
                 if (visited.find(neighbor) == visited.end()) {
                     visited.insert(neighbor);
-                    queue.push(neighbor);
+                    queue.push({neighbor,level+1});
                 }
             }
         }
@@ -263,3 +267,12 @@ int main() {
     delete g;
     return 0;
 }
+/*1 2
+1 6
+2 3
+2 4
+6 7
+6 8
+4 5
+7 5
+6 8*/
